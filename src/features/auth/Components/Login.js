@@ -7,6 +7,7 @@ import {
   increment,
   
   incrementAsync,
+  selectError,
   selectLoggedInuser,
  
  
@@ -21,7 +22,8 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const user = useSelector(selectLoggedInuser)
+  const user = useSelector(selectLoggedInuser);
+  const err = useSelector(selectError);
 
   console.log(errors);
 
@@ -47,12 +49,14 @@ export default function Login() {
             onSubmit={handleSubmit((data) => {
               console.log(data);
               dispatch(checkUserAsync(data));
+              if(err)
+              console.log(err.message);
             })}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email address
               </label>
-              <div className="mt-2">
+              <div className="mt-2 ">
                 <input
                   id="email"
                   {...register("email", {
@@ -65,7 +69,7 @@ export default function Login() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block px-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.email && (
                   <p className="text-red-500">{errors.email.message}</p>
@@ -92,7 +96,7 @@ export default function Login() {
                     
                   })}
                   type="password"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block px-2 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.password && (
                   <p className="text-red-500">{errors.password.message}</p>

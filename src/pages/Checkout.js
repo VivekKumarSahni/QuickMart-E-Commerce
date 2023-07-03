@@ -1,56 +1,142 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
-const products = [
-  {
-    id: 1,
-    name: "Throwback Hip Bag",
-    href: "#",
-    color: "Salmon",
-    price: "$90.00",
-    quantity: 1,
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
-    imageAlt:
-      "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-  },
-  {
-    id: 2,
-    name: "Medium Stuff Satchel",
-    href: "#",
-    color: "Blue",
-    price: "$32.00",
-    quantity: 1,
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
-    imageAlt:
-      "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-  },
-  // More products...
-];
-const addresses = [
-  {
-    name: "Vivek Sahni",
-    street: "11th Main",
-    city: "SiddNagar",
-    pincode: 272208,
-    phone: 9935127887,
-  },
-  {
-    name: "Sneha Sahni",
-    street: "Nadepar Road",
-    city: "SiddNagar",
-    pincode: 272207,
-    phone: 9919051989,
-  },
-];
+import {
+  getCartItemsAsync,
+  getCartItemsByUserIdAsync,
+  selectCartItems,
+  updateCartItemAsync,
+} from "../features/cart/cartSlice";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import {
+  selectLoggedInuser,
+  updateUserAsync,
+} from "../features/auth/authSlice";
+import { createOrderAsync, selectCurrentOrder } from "../features/order/orderSlice";
+
+// const products = [
+//   {
+//     id: 1,
+//     name: "Throwback Hip Bag",
+//     href: "#",
+//     color: "Salmon",
+//     price: "$90.00",
+//     quantity: 1,
+//     imageSrc:
+//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
+//     imageAlt:
+//       "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
+//   },
+//   {
+//     id: 2,
+//     name: "Medium Stuff Satchel",
+//     href: "#",
+//     color: "Blue",
+//     price: "$32.00",
+//     quantity: 1,
+//     imageSrc:
+//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
+//     imageAlt:
+//       "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
+//   },
+//   // More products...
+// ];
+// const addresses = [
+//   {
+//     name: "Vivek Sahni",
+//     street: "11th Main",
+//     city: "SiddNagar",
+//     pincode: 272208,
+//     phone: 9935127887,
+//   },
+//   {
+//     name: "Sneha Sahni",
+//     street: "Nadepar Road",
+//     city: "SiddNagar",
+//     pincode: 272207,
+//     phone: 9919051989,
+//   },
+// ];
 
 export default function Checkout() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const [open, setOpen] = useState(true);
+  const products = useSelector(selectCartItems);
+  const dispatch = useDispatch();
+  const currentOrder= useSelector(selectCurrentOrder)
+
+  const user = useSelector(selectLoggedInuser);
+  console.log(products);
+
+  const totalAmount = products.reduce(
+    (amount, products) => products.price * products.quantity + amount,
+    0
+  );
+  const totalItems = products.reduce(
+    (total, products) => products.quantity + total,
+    0
+  );
+
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState(null);
+
+  const handleQuantity = (e, product) => {
+    dispatch(updateCartItemAsync({ ...product, quantity: +e.target.value }));
+  };
+  const handleAddress = (e) => {
+    setSelectedAddress(user.addresses[e.target.value]);
+  };
+  const handlePayment = (e) => {
+    setPaymentMethod(e.target.value);
+  };
+  const handleOrder = (e) => {
+    if(selectedAddress && paymentMethod){
+    const order = {
+      products,
+      totalAmount,
+      totalItems,
+      user,
+      paymentMethod,
+      selectedAddress,
+      status: "pending", //other status can be delivered , dispatched , received
+    };
+    dispatch(createOrderAsync(order));
+   
+  }else{
+    //TODO : we can use proper messaging and popup here
+    alert("Select Address and payment Method")
+  }
+    //TODO :clear cart after order
+    //TODO :on server change the no. of stock
+  };
+
   return (
-    <>
+    <>{!products.length &&  <Navigate to="/"></Navigate>}
+    {currentOrder &&  <Navigate to={`/order-success/${currentOrder.id}`}></Navigate>}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
           <div className="sm:col-span-3">
-            <form className=" bg-white px-4 mt-12 mb-12 pt-10 pb-10">
+            <form
+              className=" bg-white px-4 mt-12 mb-12 pt-10 pb-10"
+              noValidate
+              onSubmit={handleSubmit((data) => {
+                console.log(data);
+                dispatch(
+                  updateUserAsync({
+                    ...user,
+                    addresses: [...user.addresses, data],
+                  })
+                );
+                reset();
+              })}
+            >
               <div className="space-y-12">
                 <div className="border-b border-gray-900/10 pb-5 ">
                   <h2 className=" text-2xl  font-semibold leading-7 text-gray-900">
@@ -60,38 +146,22 @@ export default function Checkout() {
                     Use a permanent address where you can receive mail.
                   </p>
                   <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                    <div className="sm:col-span-3">
+                    <div className="sm:col-span-4">
                       <label
-                        htmlFor="first-name"
+                        htmlFor="name"
                         className="block text-sm font-medium leading-6 text-gray-900"
                       >
-                        First name
+                        Full name
                       </label>
                       <div className="mt-2">
                         <input
                           type="text"
-                          name="first-name"
-                          id="first-name"
+                          {...register("name", {
+                            required: "name is required",
+                          })}
+                          id="name"
                           autoComplete="given-name"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-3">
-                      <label
-                        htmlFor="last-name"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Last name
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          type="text"
-                          name="last-name"
-                          id="last-name"
-                          autoComplete="family-name"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
                     </div>
@@ -106,10 +176,12 @@ export default function Checkout() {
                       <div className="mt-2">
                         <input
                           id="email"
-                          name="email"
+                          {...register("email", {
+                            required: "email is required",
+                          })}
                           type="email"
                           autoComplete="email"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
                     </div>
@@ -134,6 +206,25 @@ export default function Checkout() {
                         </select>
                       </div>
                     </div>
+                    <div className="sm:col-span-2">
+                      <label
+                        htmlFor="postal-code"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Mobile Number
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="tel"
+                          {...register("phone", {
+                            required: "mobile no. is required",
+                          })}
+                          id="phone"
+                          autoComplete="phone"
+                          className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
 
                     <div className="col-span-full">
                       <label
@@ -145,10 +236,12 @@ export default function Checkout() {
                       <div className="mt-2">
                         <input
                           type="text"
-                          name="street-address"
-                          id="street-address"
-                          autoComplete="street-address"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          {...register("street", {
+                            required: "street is required",
+                          })}
+                          id="street"
+                          autoComplete="street"
+                          className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
                     </div>
@@ -163,10 +256,12 @@ export default function Checkout() {
                       <div className="mt-2">
                         <input
                           type="text"
-                          name="city"
+                          {...register("city", {
+                            required: "city is required",
+                          })}
                           id="city"
                           autoComplete="address-level2"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
                     </div>
@@ -181,10 +276,12 @@ export default function Checkout() {
                       <div className="mt-2">
                         <input
                           type="text"
-                          name="region"
+                          {...register("region", {
+                            required: "region is required",
+                          })}
                           id="region"
                           autoComplete="address-level1"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
                     </div>
@@ -199,10 +296,12 @@ export default function Checkout() {
                       <div className="mt-2">
                         <input
                           type="text"
-                          name="postal-code"
+                          {...register("pinCode", {
+                            required: "pinCode is required",
+                          })}
                           id="postal-code"
                           autoComplete="postal-code"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
                     </div>
@@ -221,7 +320,6 @@ export default function Checkout() {
                       Add Address
                     </button>
                   </div>
-                  
                 </div>
 
                 <div className="border-b border-gray-900/10 pb-12">
@@ -232,15 +330,17 @@ export default function Checkout() {
                     Choose from existing address{" "}
                   </p>
                   <ul role="list" className="divide-y divide-gray-100">
-                    {addresses.map((address) => (
+                    {user.addresses.map((address,index) => (
                       <li
-                        key={address.name}
+                        key={index}
                         className="flex justify-between gap-x-6 py-5 px-5 border-solid border-gray-200 border-2"
                       >
                         <div className="flex gap-x-4">
                           <input
+                            onChange={handleAddress}
                             name="address"
                             type="radio"
+                            value={index}
                             className=" h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600 my-2"
                           />
                           <div className="min-w-0 flex-auto">
@@ -277,7 +377,10 @@ export default function Checkout() {
                           <input
                             id="cash"
                             name="payments"
+                            onChange={handlePayment}
+                            value="cash"
                             type="radio"
+                            checked={paymentMethod === "cash"}
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           />
                           <label
@@ -291,7 +394,10 @@ export default function Checkout() {
                           <input
                             id="card"
                             name="payments"
+                            onChange={handlePayment}
+                            value="card"
                             type="radio"
+                            checked={paymentMethod === "card"}
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           />
                           <label
@@ -309,7 +415,7 @@ export default function Checkout() {
             </form>
           </div>
           <div className="sm:col-span-2">
-            <div className="mx-auto mt-12 bg-white max-w-7xl px-0 py-4 sm:px-6 lg:px-8">
+            <div className="mx-auto mt-12 bg-white max-w-7xl px-2 py-2 sm:px-6 lg:px-2">
               <h1 className="text-4xl mb-5 font-bold tracking-tight text-gray-900">
                 Cart
               </h1>
@@ -320,8 +426,8 @@ export default function Checkout() {
                       <li key={product.id} className="flex py-6">
                         <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                           <img
-                            src={product.imageSrc}
-                            alt={product.imageAlt}
+                            src={product.thumbnail}
+                            alt={product.title}
                             className="h-full w-full object-cover object-center"
                           />
                         </div>
@@ -330,12 +436,12 @@ export default function Checkout() {
                           <div>
                             <div className="flex justify-between text-base font-medium text-gray-900">
                               <h3>
-                                <a href={product.href}>{product.name}</a>
+                                <a href={product.thumbnail}>{product.title}</a>
                               </h3>
-                              <p className="ml-4">{product.price}</p>
+                              <p className="ml-4">$ {product.price}</p>
                             </div>
                             <p className="mt-1 text-sm text-gray-500">
-                              {product.color}
+                              {product.brand}
                             </p>
                           </div>
                           <div className="flex flex-1 items-end justify-between text-sm">
@@ -346,10 +452,16 @@ export default function Checkout() {
                               >
                                 Qty
                               </label>
-                              <select>
+                              <select
+                                onChange={(e) => {
+                                  handleQuantity(e, product);
+                                }}
+                              >
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
                               </select>
                             </div>
 
@@ -370,21 +482,24 @@ export default function Checkout() {
               </div>
 
               <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                {/* <div className="flex justify-between text-base font-medium text-gray-900">
+    <p>Total Items in Cart</p>
+    <p>{totalItems} items</p>
+  </div> */}
                 <div className="flex justify-between text-base font-medium text-gray-900">
                   <p>Subtotal</p>
-                  <p>$262.00</p>
+                  <p>$ {totalAmount}</p>
                 </div>
                 <p className="mt-0.5 text-sm text-gray-500">
                   Shipping and taxes calculated at checkout.
                 </p>
                 <div className="mt-6">
-                  <Link
-                    to="/pay"
-                    href="#"
-                    className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                  <div
+                    onClick={handleOrder}
+                    className="flex cursor-pointer items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                   >
-                    Pay and Order
-                  </Link>
+                    But Items
+                  </div>
                 </div>
                 <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                   <p>
@@ -393,6 +508,7 @@ export default function Checkout() {
                       <button
                         type="button"
                         className="font-medium text-indigo-600 hover:text-indigo-500"
+                        onClick={() => setOpen(false)}
                       >
                         Continue Shopping
                         <span aria-hidden="true"> &rarr;</span>

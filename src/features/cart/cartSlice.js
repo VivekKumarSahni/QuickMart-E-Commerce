@@ -1,22 +1,36 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchCount } from './cartAPI';
+import { addToCart, getCartItems, getCartItemsByUserId, updateCartItem } from './cartAPI';
 
 const initialState = {
-  value: 0,
+  items: [],
   status: 'idle',
 };
 
 
-export const incrementAsync = createAsyncThunk(
-  'counter/fetchCount',
-  async (amount) => {
-    const response = await fetchCount(amount);
+export const addToCartAsync = createAsyncThunk(
+  'cart/addToCart',
+  async (item) => {
+    const response = await addToCart(item);
+    return response.data;
+  }
+);
+export const getCartItemsByUserIdAsync = createAsyncThunk(
+  'cart/getCartItemsByUserId',
+  async (userId) => {
+    const response = await getCartItemsByUserId(userId);
+    return response.data;
+  }
+);
+export const updateCartItemAsync = createAsyncThunk(
+  'cart/updateCartItem',
+  async (update) => {
+    const response = await updateCartItem(update);
     return response.data;
   }
 );
 
 export const cartSlice = createSlice({
-  name: 'counter',
+  name: 'cart',
   initialState,
   reducers: {
     increment: (state) => {
@@ -27,12 +41,25 @@ export const cartSlice = createSlice({
   
   extraReducers: (builder) => {
     builder
-      .addCase(incrementAsync.pending, (state) => {
+      .addCase(addToCartAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(incrementAsync.fulfilled, (state, action) => {
+      .addCase(addToCartAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.value += action.payload;
+        state.items.push(action.payload);
+      }).addCase(getCartItemsByUserIdAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getCartItemsByUserIdAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.items=action.payload;
+      }).addCase(updateCartItemAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateCartItemAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        const ind= state.items.find(it=>it.id===action.payload.id)
+        state.items[state.items.indexOf(ind)]=action.payload;
       });
   },
 });
@@ -40,7 +67,7 @@ export const cartSlice = createSlice({
 export const { increment } = cartSlice.actions;
 
 
-export const selectCount = (state) => state.counter.value;
+export const selectCartItems = (state) => state.cart.items;
 
 
 

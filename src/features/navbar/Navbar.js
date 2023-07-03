@@ -2,6 +2,8 @@ import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, ShoppingCartIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectCartItems } from '../cart/cartSlice'
 
 const user = {
     name: 'Tom Cook',
@@ -17,9 +19,9 @@ const user = {
     { name: 'Reports', href: '#', current: false },
   ]
   const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
+    { name: 'Your Profile', link: '/' },
+    { name: 'Settings', link: '/' },
+    { name: 'Sign out', link: '/login' },
   ]
   
   function classNames(...classes) {
@@ -27,7 +29,9 @@ const user = {
   }
 
 export default function Navbar({children}){
-    
+ 
+  
+  const items =useSelector(selectCartItems);
 return (
     <>
      <div className="min-h-full">
@@ -78,7 +82,7 @@ return (
                       </button>
                       </Link>
                       <span className="inline-flex items-center rounded-md mb-7 -ml-3 bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-        3
+        {items.length}
       </span>
 
                       {/* Profile dropdown */}
@@ -102,7 +106,7 @@ return (
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <a
+                                  <Link to={item.link}
                                     href={item.href}
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
@@ -110,7 +114,7 @@ return (
                                     )}
                                   >
                                     {item.name}
-                                  </a>
+                                  </Link>
                                 )}
                               </Menu.Item>
                             ))}

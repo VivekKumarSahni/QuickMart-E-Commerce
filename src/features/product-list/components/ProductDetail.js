@@ -25,6 +25,8 @@ import { RadioGroup } from '@headlessui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProductByIdAsync, selectProductById } from '../productSlice'
 import { useParams } from 'react-router-dom'
+import { addToCartAsync } from '../../cart/cartSlice'
+import { selectLoggedInuser } from '../../auth/authSlice'
 
 
 const colors=[
@@ -53,9 +55,15 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState(sizes[2])
 
   const product = useSelector(selectProductById);
+  const user = useSelector(selectLoggedInuser);
 const dispatch = useDispatch();
 const params= useParams();
 
+ const handleCart=()=>{
+  const newItem ={...product, quantity:1,user :user.id};
+  delete newItem['id'];
+  dispatch(addToCartAsync(newItem))
+ }
 
  useEffect(()=>{
   dispatch(fetchProductByIdAsync(params.id))
@@ -137,7 +145,7 @@ const params= useParams();
           {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
-            <p className="text-3xl tracking-tight text-gray-900">{product.price}</p>
+            <p className="text-3xl tracking-tight text-gray-900">${product.price}</p>
 
             {/* Reviews */}
             <div className="mt-6">
@@ -262,7 +270,14 @@ const params= useParams();
               </div>
 
               <button
-                type="submit"
+              
+              // onClick={(e)=>{  console.log(product)}}
+              onClick={(e)=>{
+
+              e.preventDefault();
+                handleCart();
+              }}
+               
                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Add to bag
