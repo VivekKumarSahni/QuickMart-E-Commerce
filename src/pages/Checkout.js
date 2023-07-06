@@ -14,6 +14,7 @@ import {
   updateUserAsync,
 } from "../features/auth/authSlice";
 import { createOrderAsync, selectCurrentOrder } from "../features/order/orderSlice";
+import { selectUserInfo } from "../features/user/userSlice";
 
 // const products = [
 //   {
@@ -72,7 +73,7 @@ export default function Checkout() {
   const dispatch = useDispatch();
   const currentOrder= useSelector(selectCurrentOrder)
 
-  const user = useSelector(selectLoggedInuser);
+  const user = useSelector(selectUserInfo);
   console.log(products);
 
   const totalAmount = products.reduce(

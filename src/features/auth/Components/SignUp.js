@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { createUserAsync,selectLoggedInuser } from "../authSlice";
+import { createUserAsync, selectLoggedInuser } from "../authSlice";
 import { Link, Navigate } from "react-router-dom";
 
 export default function SignUp() {
   const dispatch = useDispatch();
-  const user =useSelector(selectLoggedInuser)
+  const user = useSelector(selectLoggedInuser);
   const {
     register,
     handleSubmit,
@@ -34,7 +34,15 @@ export default function SignUp() {
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
               console.log(data);
-              dispatch(createUserAsync({email:data.email , password : data.password,addresses:[]}));
+              dispatch(
+                createUserAsync({
+                  email: data.email,
+                  password: data.password,
+                  addresses: [],
+                  role:'user'
+                  //this role can be directly given on backend
+                })
+              );
             })}
           >
             <div>
@@ -107,8 +115,8 @@ export default function SignUp() {
                   id="confirmPassword"
                   {...register("confirmPassword", {
                     required: "confirm-password is required",
-                    validate: (value, formValues) => value === formValues.password || "password not matching"
-
+                    validate: (value, formValues) =>
+                      value === formValues.password || "password not matching",
                   })}
                   type="password"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

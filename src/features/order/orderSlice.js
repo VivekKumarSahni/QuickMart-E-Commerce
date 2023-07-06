@@ -16,13 +16,14 @@ export const createOrderAsync = createAsyncThunk(
   }
 );
 
-export const counterSlice = createSlice({
+export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1;
+    resetOrder: (state) => {
+      state.currentorder =null;
     },
+
   },
   extraReducers: (builder) => {
     builder
@@ -39,6 +40,6 @@ export const counterSlice = createSlice({
 
 export const selectCurrentOrder =(state)=> state.order.currentorder;
 
-// export const selectCount = (state) => state.counter.value;
+export const {resetOrder}= orderSlice.actions;
 
-export default counterSlice.reducer;
+export default orderSlice.reducer;

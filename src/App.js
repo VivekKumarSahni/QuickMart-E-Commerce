@@ -20,6 +20,13 @@ import { selectLoggedInuser } from './features/auth/authSlice';
 import { getCartItemsByUserIdAsync } from './features/cart/cartSlice';
 import PageNotFound from './pages/PageNotFound';
 import Ordersuccess from './pages/Ordersuccess';
+import Navbar from './features/navbar/Navbar';
+import UserOrders from './features/user/Components/UserOrders';
+import UserOrderPage from './pages/UserOrderPage';
+import UserProfilePage from './pages/UserProfilePage';
+import { fetchLoggedInUserAsync } from './features/user/userSlice';
+import Logout from './features/auth/Components/Logout';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 const router = createBrowserRouter([
   {
@@ -56,6 +63,24 @@ const router = createBrowserRouter([
     path: '/order-success/:id',
     element: (<Ordersuccess ></Ordersuccess>),
   },
+  {
+    path: '/orders',
+    element: (<UserOrderPage></UserOrderPage>),
+  },
+  {
+    path: '/MyProfile',
+    element: (<UserProfilePage></UserProfilePage>),
+  }
+  ,
+  {
+    path: '/logout',
+    element: (<Logout></Logout>)
+  }
+  ,
+  {
+    path: '/forgot-password',
+    element: (<ForgotPasswordPage></ForgotPasswordPage>)
+  }
 ]);
 
 function App() {
@@ -64,9 +89,9 @@ const user = useSelector(selectLoggedInuser);
 
   useEffect(()=>{
     if(user){
-      console.log(user+'i am vivkeff')
       console.log(user.id)
     dispatch(getCartItemsByUserIdAsync(user.id));
+    dispatch(fetchLoggedInUserAsync(user.id));
     }
    },[dispatch,user])
 
