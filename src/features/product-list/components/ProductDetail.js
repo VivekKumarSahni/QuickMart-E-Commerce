@@ -25,8 +25,9 @@ import { RadioGroup } from '@headlessui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProductByIdAsync, selectProductById } from '../productSlice'
 import { useParams } from 'react-router-dom'
-import { addToCartAsync } from '../../cart/cartSlice'
+import { addToCartAsync, selectCartItems } from '../../cart/cartSlice'
 import { selectLoggedInuser } from '../../auth/authSlice'
+import { useAlert } from 'react-alert'
 
 
 const colors=[
@@ -56,13 +57,22 @@ export default function ProductDetail() {
 
   const product = useSelector(selectProductById);
   const user = useSelector(selectLoggedInuser);
+  const cartItems =useSelector(selectCartItems);
 const dispatch = useDispatch();
 const params= useParams();
+const alert = useAlert();
 
  const handleCart=()=>{
-  const newItem ={...product, quantity:1,user :user.id};
+  if(cartItems.findIndex(it=>it.productId===product.id) <0)
+{
+  const newItem ={...product, productId:product.id ,quantity:1,user :user.id};
   delete newItem['id'];
   dispatch(addToCartAsync(newItem))
+  alert.success('Item added to cart');
+}else{
+  alert.show('Item already added');
+ 
+}
  }
 
  useEffect(()=>{
@@ -280,7 +290,8 @@ const params= useParams();
                
                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                Add to bag
+               {(cartItems.findIndex(it=>it.productId===product.id) <0)?'Add to Cart':'Added to cart'
+}
               </button>
             </form>
           </div>

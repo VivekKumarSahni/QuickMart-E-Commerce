@@ -4,7 +4,36 @@ import { ITEMS_PER_PAGE } from "../../app/constants";
 export function fetchAllProducts() {
   return new Promise(async(resolve) =>{
     
-   const response = await fetch('http://localhost:8080/products')
+   const response = await fetch('http://localhost:8080/products');
+   //Server will fetch deleted products
+   const data = await response.json()
+   resolve({data}); 
+  }
+  )
+}
+export function createProduct(product) {
+  return new Promise(async(resolve) =>{
+    
+   const response = await fetch('http://localhost:8080/products/',{
+   
+   method:'POST',
+   body: JSON.stringify(product),
+   headers:{'content-type':'application/json'}
+   
+  })
+   const data = await response.json()
+   resolve({data});
+  
+  }
+  )
+}
+export function updateProduct(update) {
+  return new Promise(async(resolve) =>{
+   const response = await fetch('http://localhost:8080/products/'+update.id,{
+    method:'PATCH',
+    body:JSON.stringify(update),
+    headers:{'content-type':'application/json'}
+   })
    const data = await response.json()
    resolve({data});
   
@@ -26,6 +55,8 @@ export function fetchProductById(id) {
 export function fetchProductsByFilters(filter,page) {
 //filter = {"category ": "smartphone"}
 //_page=1&_limit=10
+//TODO : on server we will support multivalues in filter
+//TODO: Server will filter deleted products
 let queryString ='';
 for(let key in filter){
   queryString +=`${key}=${filter[key]}&`

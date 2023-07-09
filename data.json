@@ -4,10 +4,10 @@
       "id": 1,
       "title": "iPhone 9",
       "description": "An apple mobile which is nothing like apple",
-      "price": 549,
+      "price": 500,
       "discountPercentage": 12.96,
       "rating": 4.69,
-      "stock": 94,
+      "stock": 0,
       "brand": "Apple",
       "category": "smartphones",
       "thumbnail": "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
@@ -15,7 +15,6 @@
         "https://i.dummyjson.com/data/products/1/1.jpg",
         "https://i.dummyjson.com/data/products/1/2.jpg",
         "https://i.dummyjson.com/data/products/1/3.jpg",
-        "https://i.dummyjson.com/data/products/1/4.jpg",
         "https://i.dummyjson.com/data/products/1/thumbnail.jpg"
       ]
     },
@@ -23,7 +22,7 @@
       "id": 2,
       "title": "iPhone X",
       "description": "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
-      "price": 899,
+      "price": 999,
       "discountPercentage": 17.94,
       "rating": 4.44,
       "stock": 34,
@@ -50,7 +49,8 @@
       "thumbnail": "https://i.dummyjson.com/data/products/3/thumbnail.jpg",
       "images": [
         "https://i.dummyjson.com/data/products/3/1.jpg"
-      ]
+      ],
+      "deleted": true
     },
     {
       "id": 4,
@@ -722,12 +722,34 @@
       "email": "vsahni674@gmail.com",
       "password": "ab123456",
       "id": 1,
-      "addresses": []
+      "role": "user",
+      "addresses": [
+        {
+          "name": "Vivek Kumar Sahni",
+          "email": "viveksahni78875@gmail.com",
+          "phone": "09935127887",
+          "street": "nit silchar",
+          "city": "SILCHAR",
+          "state": "Assam",
+          "region": "Assam",
+          "pinCode": "788010"
+        },
+        {
+          "name": "Vicky Kaushal",
+          "email": "vsahni674@gmail.com",
+          "phone": "8081288707",
+          "street": "hostel 8",
+          "city": "SILCHAR",
+          "state": "Assam",
+          "pinCode": "788010"
+        }
+      ]
     },
     {
       "email": "viveksahni78875@gmail.com",
       "password": "1234qwer",
       "id": 2,
+      "role": "admin",
       "addresses": [
         {
           "name": "Vivek Kumar Sahni",
@@ -758,66 +780,6 @@
   ],
   "cart": [
     {
-      "title": "iPhone X",
-      "description": "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
-      "price": 899,
-      "discountPercentage": 17.94,
-      "rating": 4.44,
-      "stock": 34,
-      "brand": "Apple",
-      "category": "smartphones",
-      "thumbnail": "https://i.dummyjson.com/data/products/2/thumbnail.jpg",
-      "images": [
-        "https://i.dummyjson.com/data/products/2/1.jpg",
-        "https://i.dummyjson.com/data/products/2/2.jpg",
-        "https://i.dummyjson.com/data/products/2/3.jpg",
-        "https://i.dummyjson.com/data/products/2/thumbnail.jpg"
-      ],
-      "quantity": 5,
-      "user": 1,
-      "id": 3
-    },
-    {
-      "title": "HP Pavilion 15-DK1056WM",
-      "description": "HP Pavilion 15-DK1056WM Gaming Laptop 10th Gen Core i5, 8GB, 256GB SSD, GTX 1650 4GB, Windows 10",
-      "price": 1099,
-      "discountPercentage": 6.18,
-      "rating": 4.43,
-      "stock": 89,
-      "brand": "HP Pavilion",
-      "category": "laptops",
-      "thumbnail": "https://i.dummyjson.com/data/products/10/thumbnail.jpeg",
-      "images": [
-        "https://i.dummyjson.com/data/products/10/1.jpg",
-        "https://i.dummyjson.com/data/products/10/2.jpg",
-        "https://i.dummyjson.com/data/products/10/3.jpg",
-        "https://i.dummyjson.com/data/products/10/thumbnail.jpeg"
-      ],
-      "quantity": 5,
-      "user": 1,
-      "id": 4
-    },
-    {
-      "title": "iPhone X",
-      "description": "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
-      "price": 899,
-      "discountPercentage": 17.94,
-      "rating": 4.44,
-      "stock": 34,
-      "brand": "Apple",
-      "category": "smartphones",
-      "thumbnail": "https://i.dummyjson.com/data/products/2/thumbnail.jpg",
-      "images": [
-        "https://i.dummyjson.com/data/products/2/1.jpg",
-        "https://i.dummyjson.com/data/products/2/2.jpg",
-        "https://i.dummyjson.com/data/products/2/3.jpg",
-        "https://i.dummyjson.com/data/products/2/thumbnail.jpg"
-      ],
-      "quantity": 3,
-      "user": 1,
-      "id": 5
-    },
-    {
       "title": "Hyaluronic Acid Serum",
       "description": "L'OrÃ©al Paris introduces Hyaluron Expert Replumping Serum formulated with 1.5% Hyaluronic Acid",
       "price": 19,
@@ -839,6 +801,49 @@
       "id": 7
     },
     {
+      "title": "Eau De Perfume Spray",
+      "description": "Genuine  Al-Rehab spray perfume from UAE/Saudi Arabia/Yemen High Quality",
+      "price": 30,
+      "discountPercentage": 10.99,
+      "rating": 4.7,
+      "stock": 105,
+      "brand": "Lord - Al-Rehab",
+      "category": "fragrances",
+      "thumbnail": "https://i.dummyjson.com/data/products/15/thumbnail.jpg",
+      "images": [
+        "https://i.dummyjson.com/data/products/15/1.jpg",
+        "https://i.dummyjson.com/data/products/15/2.jpg",
+        "https://i.dummyjson.com/data/products/15/3.jpg",
+        "https://i.dummyjson.com/data/products/15/4.jpg",
+        "https://i.dummyjson.com/data/products/15/thumbnail.jpg"
+      ],
+      "productId": 15,
+      "quantity": 1,
+      "user": 2,
+      "id": 9
+    },
+    {
+      "title": "HP Pavilion 15-DK1056WM",
+      "description": "HP Pavilion 15-DK1056WM Gaming Laptop 10th Gen Core i5, 8GB, 256GB SSD, GTX 1650 4GB, Windows 10",
+      "price": 1099,
+      "discountPercentage": 6.18,
+      "rating": 4.43,
+      "stock": 89,
+      "brand": "HP Pavilion",
+      "category": "laptops",
+      "thumbnail": "https://i.dummyjson.com/data/products/10/thumbnail.jpeg",
+      "images": [
+        "https://i.dummyjson.com/data/products/10/1.jpg",
+        "https://i.dummyjson.com/data/products/10/2.jpg",
+        "https://i.dummyjson.com/data/products/10/3.jpg",
+        "https://i.dummyjson.com/data/products/10/thumbnail.jpeg"
+      ],
+      "productId": 10,
+      "quantity": 1,
+      "user": 2,
+      "id": 10
+    },
+    {
       "title": "Samsung Galaxy Book",
       "description": "Samsung Galaxy Book S (2020) Laptop With Intel Lakefield Chip, 8GB of RAM Launched",
       "price": 1499,
@@ -854,9 +859,32 @@
         "https://i.dummyjson.com/data/products/7/3.jpg",
         "https://i.dummyjson.com/data/products/7/thumbnail.jpg"
       ],
+      "productId": 7,
       "quantity": 1,
       "user": 2,
-      "id": 8
+      "id": 11
+    },
+    {
+      "title": "Microsoft Surface Laptop 4",
+      "description": "Style and speed. Stand out on HD video calls backed by Studio Mics. Capture ideas on the vibrant touchscreen.",
+      "price": 1499,
+      "discountPercentage": 10.23,
+      "rating": 4.43,
+      "stock": 68,
+      "brand": "Microsoft Surface",
+      "category": "laptops",
+      "thumbnail": "https://i.dummyjson.com/data/products/8/thumbnail.jpg",
+      "images": [
+        "https://i.dummyjson.com/data/products/8/1.jpg",
+        "https://i.dummyjson.com/data/products/8/2.jpg",
+        "https://i.dummyjson.com/data/products/8/3.jpg",
+        "https://i.dummyjson.com/data/products/8/4.jpg",
+        "https://i.dummyjson.com/data/products/8/thumbnail.jpg"
+      ],
+      "productId": 8,
+      "quantity": 1,
+      "user": 2,
+      "id": 12
     }
   ],
   "orders": [
@@ -960,7 +988,7 @@
         "region": "Assam",
         "pinCode": "788010"
       },
-      "status": "pending",
+      "status": "dispatched",
       "id": 1
     },
     {
@@ -1044,7 +1072,7 @@
         "region": "UP",
         "pinCode": "288707"
       },
-      "status": "pending",
+      "status": "delivered",
       "id": 2
     },
     {
@@ -1128,8 +1156,114 @@
         "region": "UP",
         "pinCode": "288707"
       },
-      "status": "pending",
+      "status": "cancelled",
       "id": 3
+    },
+    {
+      "products": [
+        {
+          "title": "iPhone X",
+          "description": "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
+          "price": 899,
+          "discountPercentage": 17.94,
+          "rating": 4.44,
+          "stock": 34,
+          "brand": "Apple",
+          "category": "smartphones",
+          "thumbnail": "https://i.dummyjson.com/data/products/2/thumbnail.jpg",
+          "images": [
+            "https://i.dummyjson.com/data/products/2/1.jpg",
+            "https://i.dummyjson.com/data/products/2/2.jpg",
+            "https://i.dummyjson.com/data/products/2/3.jpg",
+            "https://i.dummyjson.com/data/products/2/thumbnail.jpg"
+          ],
+          "quantity": 5,
+          "user": 1,
+          "id": 3
+        },
+        {
+          "title": "HP Pavilion 15-DK1056WM",
+          "description": "HP Pavilion 15-DK1056WM Gaming Laptop 10th Gen Core i5, 8GB, 256GB SSD, GTX 1650 4GB, Windows 10",
+          "price": 1099,
+          "discountPercentage": 6.18,
+          "rating": 4.43,
+          "stock": 89,
+          "brand": "HP Pavilion",
+          "category": "laptops",
+          "thumbnail": "https://i.dummyjson.com/data/products/10/thumbnail.jpeg",
+          "images": [
+            "https://i.dummyjson.com/data/products/10/1.jpg",
+            "https://i.dummyjson.com/data/products/10/2.jpg",
+            "https://i.dummyjson.com/data/products/10/3.jpg",
+            "https://i.dummyjson.com/data/products/10/thumbnail.jpeg"
+          ],
+          "quantity": 5,
+          "user": 1,
+          "id": 4
+        },
+        {
+          "title": "iPhone X",
+          "description": "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
+          "price": 899,
+          "discountPercentage": 17.94,
+          "rating": 4.44,
+          "stock": 34,
+          "brand": "Apple",
+          "category": "smartphones",
+          "thumbnail": "https://i.dummyjson.com/data/products/2/thumbnail.jpg",
+          "images": [
+            "https://i.dummyjson.com/data/products/2/1.jpg",
+            "https://i.dummyjson.com/data/products/2/2.jpg",
+            "https://i.dummyjson.com/data/products/2/3.jpg",
+            "https://i.dummyjson.com/data/products/2/thumbnail.jpg"
+          ],
+          "quantity": 3,
+          "user": 1,
+          "id": 5
+        }
+      ],
+      "totalAmount": 12687,
+      "totalItems": 13,
+      "user": {
+        "email": "vsahni674@gmail.com",
+        "password": "ab123456",
+        "id": 1,
+        "role": "admin",
+        "addresses": [
+          {
+            "name": "Vivek Kumar Sahni",
+            "email": "viveksahni78875@gmail.com",
+            "phone": "09935127887",
+            "street": "nit silchar",
+            "city": "SILCHAR",
+            "state": "Assam",
+            "region": "Assam",
+            "pinCode": "788010"
+          },
+          {
+            "name": "Vicky Kaushal",
+            "email": "vsahni674@gmail.com",
+            "phone": "8081288707",
+            "street": "hostel 8",
+            "city": "SILCHAR",
+            "state": "Assam",
+            "pinCode": "788010"
+          }
+        ]
+      },
+      "paymentMethod": "cash",
+      "selectedAddress": {
+        "name": "Vivek Kumar Sahni",
+        "email": "viveksahni78875@gmail.com",
+        "phone": "09935127887",
+        "street": "nit silchar",
+        "city": "SILCHAR",
+        "state": "Assam",
+        "region": "Assam",
+        "pinCode": "788010"
+      },
+      "status": "pending",
+      "id": 4
     }
   ]
 }

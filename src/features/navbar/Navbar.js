@@ -8,23 +8,22 @@ import { selectLoggedInuser } from '../auth/authSlice'
 
 
 
-const user = {
+const userD = {
     name: 'Vivek Sahni',
     email: 'tom@example.com',
     imageUrl:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
   }
   const navigation = [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'Team', href: '#', current: false },
-    { name: 'Projects', href: '#', current: false },
-    { name: 'Calendar', href: '#', current: false },
-    { name: 'Reports', href: '#', current: false },
+    { name: 'Products', link: '/', user: true,admin:true },
+    { name: 'Admin', link:'/admin',admin:true },
+    { name: 'Orders', link:'/admin/orders',admin:true },
   ]
   const userNavigation = [
     { name: 'My Profile', link: '/myProfile' },
     { name: 'My Orders', link: '/orders' },
     { name: 'Sign out', link:'/login' },
+   
   ]
   
   function classNames(...classes) {
@@ -32,7 +31,7 @@ const user = {
   }
 
 export default function Navbar({children}){
-  const userData= useSelector(selectLoggedInuser);
+  const user= useSelector(selectLoggedInuser);
   
   const items =useSelector(selectCartItems);
 return (
@@ -56,9 +55,9 @@ return (
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
                         {navigation.map((item) => (
-                          <a
+                         item[user.role]? (<Link to={item.link}
                             key={item.name}
-                            href={item.href}
+                           
                             className={classNames(
                               item.current
                                 ? 'bg-gray-900 text-white'
@@ -68,7 +67,7 @@ return (
                             aria-current={item.current ? 'page' : undefined}
                           >
                             {item.name}
-                          </a>
+                          </Link>) : null
                         ))}
                       </div>
                     </div>
@@ -163,8 +162,8 @@ return (
                       <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">{user.name}</div>
-                      <div className="text-sm font-medium leading-none text-gray-400">{userData.email}</div>
+                      <div className="text-base font-medium leading-none text-white">{userD.name}</div>
+                      <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
                     </div>
                     <Link to='/cart'>
                                         <button
